@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Certificate Authenticity Verification | The Communication Club</title>
+  <meta name="description" content="Verify the authenticity of official E-Certificates issued by The Communication Club, Sona College of Technology.">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800&family=Outfit:wght@300;400;500;600;700;800&family=Montserrat:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/certificate.css">
+
+  <!-- SheetJS Library for Excel (.xlsx / .xls) reading -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+  <!-- PDF & Image Generation Libraries -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+</head>
+<body>
+
+  <!-- Top Navigation -->
+  <header class="navbar no-print">
+    <div class="nav-container">
+      <div class="brand-wrapper">
+        <div class="brand-icon">
+          <img src="assets/logos/tec-lion.svg" alt="TCC Lion Crest">
+        </div>
+        <div class="brand-titles">
+          <span class="brand-name">CERTIFICATE VERIFICATION</span>
+          <span class="brand-sub">Sona College of Technology • Official Trust Registry</span>
+        </div>
+      </div>
+
+      <div class="nav-actions">
+        <a href="index.html" class="btn btn-secondary btn-sm">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          Claim Portal
+        </a>
+        <a href="admin.html" class="btn btn-primary btn-sm">Coordinator Portal</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Verification Area -->
+  <main class="main-wrapper">
+    
+    <div class="hero-section no-print" style="margin-bottom: 2rem;">
+      <div class="hero-pill" style="border-color: rgba(16, 185, 129, 0.4); background: rgba(16, 185, 129, 0.1); color: #34d399;">
+        <span class="dot" style="background: #10b981;"></span>
+        <span>Cryptographic Public Verification Registry</span>
+      </div>
+      <h1 class="hero-title" style="font-size: 2.3rem;">
+        Verify E-Certificate Authenticity
+      </h1>
+      <p class="hero-description" style="margin-bottom: 1.5rem;">
+        Enter any official Certificate ID or scan the QR Code printed on the certificate to confirm its validity.
+      </p>
+
+      <!-- Search Verification Form -->
+      <form id="verify-search-form" style="max-width: 500px; margin: 0 auto; display: flex; gap: 8px;">
+        <input type="text" id="verify-input-id" class="input-field" placeholder="Enter Certificate ID (e.g. TCC-2026-PAR-8801)" required>
+        <button type="submit" class="btn btn-primary">Verify Now</button>
+      </form>
+    </div>
+
+    <!-- Verification Result Status Box -->
+    <div id="verify-result-card" style="display: none; max-width: 820px; margin: 0 auto 2.5rem auto; background: var(--dark-surface); border: 1px solid var(--dark-border); border-radius: var(--radius-lg); padding: 2rem; box-shadow: var(--shadow-card);">
+      <div style="display: flex; align-items: center; gap: 1.25rem; margin-bottom: 1.5rem; padding-bottom: 1.25rem; border-bottom: 1px solid var(--dark-border);">
+        <div style="width: 54px; height: 54px; border-radius: 50%; background: rgba(16, 185, 129, 0.15); border: 2px solid #10b981; display: flex; align-items: center; justify-content: center; font-size: 26px; color: #10b981;">
+          ✔
+        </div>
+        <div>
+          <div style="font-size: 1.25rem; font-weight: 800; color: #34d399;">OFFICIAL CERTIFICATE VERIFIED</div>
+          <div style="font-size: 0.85rem; color: var(--text-muted);">
+            This certificate is authentic, tamper-proof, and issued by The Communication Club, Sona College of Technology.
+          </div>
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.25rem; margin-bottom: 1.5rem;">
+        <div>
+          <span style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Recipient Name</span>
+          <div style="font-weight: 700; font-size: 1.1rem; color: #fff;" id="res-name">-</div>
+        </div>
+        <div>
+          <span style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Category / Role</span>
+          <div style="font-weight: 700; font-size: 1rem; color: var(--primary);" id="res-cat">-</div>
+        </div>
+        <div>
+          <span style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Event Title</span>
+          <div style="font-weight: 700; font-size: 1rem; color: #fff;" id="res-event">-</div>
+        </div>
+        <div>
+          <span style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Certificate ID</span>
+          <div style="font-family: monospace; font-weight: 700; font-size: 1rem; color: var(--accent-cyan);" id="res-id">-</div>
+        </div>
+        <div>
+          <span style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Issuing Institution</span>
+          <div style="font-weight: 600; font-size: 0.9rem; color: #fff;" id="res-inst">Sona College of Technology</div>
+        </div>
+        <div>
+          <span style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Date of Issue</span>
+          <div style="font-weight: 600; font-size: 0.9rem; color: #fff;" id="res-date">-</div>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div style="display: flex; justify-content: flex-end; gap: 10px;">
+        <button class="btn btn-secondary btn-sm" id="btn-verify-download-png">Download PNG</button>
+        <button class="btn btn-primary btn-sm" id="btn-verify-download-pdf">Download Official PDF</button>
+      </div>
+    </div>
+
+    <!-- Embedded Certificate Canvas -->
+    <div id="verify-cert-container" style="display: none; background: var(--dark-surface); border: 1px solid var(--dark-border); border-radius: var(--radius-lg); padding: 1.75rem;">
+      <div class="cert-canvas-wrapper" id="verify-canvas-mount"></div>
+    </div>
+
+  </main>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- Scripts -->
+  <script src="js/certificate-store.js"></script>
+  <script src="js/certificate-renderer.js"></script>
+  <script src="js/google-forms-importer.js"></script>
+  <script src="js/pdf-generator.js"></script>
+  <script src="js/auth.js"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const params = new URLSearchParams(window.location.search);
+      const certId = params.get('id');
+
+      if (certId) {
+        document.getElementById('verify-input-id').value = certId;
+        verifyCertificate(certId);
+      }
+
+      document.getElementById('verify-search-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const id = document.getElementById('verify-input-id').value.trim();
+        verifyCertificate(id);
+      });
+
+      document.getElementById('btn-verify-download-pdf')?.addEventListener('click', () => {
+        const activeMount = document.querySelector('#verify-canvas-mount .cert-sheet');
+        if (activeMount) {
+          window.pdfGenerator.exportToPDF(activeMount, 'Verified_Certificate.pdf');
+        }
+      });
+
+      document.getElementById('btn-verify-download-png')?.addEventListener('click', () => {
+        const activeMount = document.querySelector('#verify-canvas-mount .cert-sheet');
+        if (activeMount) {
+          window.pdfGenerator.exportToPNG(activeMount, 'Verified_Certificate.png');
+        }
+      });
+    });
+
+    function verifyCertificate(id) {
+      if (!id) return;
+      const cert = window.certStore.findCertificateById(id);
+      const settings = window.certStore.getSettings();
+
+      const resultCard = document.getElementById('verify-result-card');
+      const certContainer = document.getElementById('verify-cert-container');
+      const mount = document.getElementById('verify-canvas-mount');
+
+      if (!cert) {
+        resultCard.style.display = 'none';
+        certContainer.style.display = 'none';
+        showToast(`Certificate ID "${id}" could not be found in the registry.`, 'error');
+        return;
+      }
+
+      // Populate details
+      document.getElementById('res-name').textContent = cert.name;
+      document.getElementById('res-cat').textContent = cert.category === 'organiser' ? '🌟 Event Organiser & Coordinator' : '🎓 Distinguished Participant';
+      document.getElementById('res-event').textContent = cert.eventName || settings.eventName;
+      document.getElementById('res-id').textContent = cert.id;
+      document.getElementById('res-date').textContent = cert.issueDate || settings.issueDate;
+      document.getElementById('res-inst').textContent = settings.institutionName;
+
+      resultCard.style.display = 'block';
+      certContainer.style.display = 'block';
+
+      // Mount high definition certificate
+      window.certRenderer.mountCertificate(mount, cert, settings);
+      showToast('Certificate verified successfully! ✔', 'success');
+      resultCard.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function showToast(message, type = 'info') {
+      const container = document.getElementById('toast-container') || document.body;
+      const toast = document.createElement('div');
+      toast.className = `toast ${type}`;
+      toast.innerHTML = `<span>${message}</span>`;
+      container.appendChild(toast);
+      setTimeout(() => toast.remove(), 3500);
+    }
+  </script>
+</body>
+</html>

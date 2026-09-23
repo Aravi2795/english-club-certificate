@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 65" width="100%" height="100%">
+  <defs>
+    <linearGradient id="shieldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFD700" />
+      <stop offset="100%" stop-color="#FFA500" />
+    </linearGradient>
+    <filter id="dropShadow" x="-10%" y="-10%" width="130%" height="130%">
+      <feDropShadow dx="1" dy="2" stdDeviation="1" flood-opacity="0.25"/>
+    </filter>
+  </defs>
+
+  <!-- Golden Rounded Banner -->
+  <rect x="5" y="6" width="145" height="48" rx="8" fill="url(#shieldGrad)" stroke="#B8860B" stroke-width="1.5" filter="url(#dropShadow)"/>
+  
+  <text x="75" y="24" font-family="'Segoe UI', Roboto, sans-serif" font-size="11" font-weight="900" fill="#1b2a4a" text-anchor="middle" letter-spacing="0.5">In Education</text>
+  <text x="75" y="44" font-family="'Arial Black', sans-serif" font-size="16" font-weight="900" fill="#002b66" text-anchor="middle" letter-spacing="1">Since 1958</text>
+
+  <!-- Right Emblem Circle -->
+  <g transform="translate(162, 30)">
+    <circle cx="0" cy="0" r="24" fill="#ffffff" stroke="#FFA500" stroke-width="2.5" filter="url(#dropShadow)"/>
+    <circle cx="0" cy="0" r="20" fill="#fffdf0" stroke="#003566" stroke-width="1"/>
+    <!-- Book & Flame Icon -->
+    <path d="M -12,8 Q -6,4 0,7 Q 6,4 12,8 L 12,12 Q 6,8 0,11 Q -6,8 -12,12 Z" fill="#003566"/>
+    <!-- Torch Flame -->
+    <path d="M 0,-12 C -5,-6 -4,-1 0,3 C 4,-1 5,-6 0,-12 Z" fill="#e65100"/>
+    <path d="M 0,-8 C -2,-4 -2,-2 0,1 C 2,-2 2,-4 0,-8 Z" fill="#ffb300"/>
+  </g>
+</svg>

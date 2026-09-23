@@ -1,0 +1,114 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 630 100" width="100%" height="100%">
+  <defs>
+    <style>
+      .card-border { fill: #ffffff; stroke: #f5b700; stroke-width: 2; rx: 8px; }
+      .text-title { font-family: 'Montserrat', 'Segoe UI', Arial, sans-serif; font-size: 8.5px; fill: #111111; font-weight: 700; text-anchor: middle; }
+      .text-sub { font-family: 'Montserrat', 'Segoe UI', Arial, sans-serif; font-size: 7px; fill: #333333; font-weight: 500; text-anchor: middle; }
+      .text-hindi { font-family: 'Segoe UI', Arial, sans-serif; font-size: 6px; fill: #9e1a38; font-weight: bold; text-anchor: middle; }
+      .text-siro { font-family: 'Arial Black', sans-serif; font-size: 8.5px; fill: #333333; font-weight: 900; text-anchor: middle; letter-spacing: 0.5px; }
+    </style>
+  </defs>
+
+  <!-- ==================== 1. NIRF CARD ==================== -->
+  <g transform="translate(4, 3)">
+    <rect class="card-border" x="0" y="0" width="98" height="94" />
+    <g transform="translate(49, 32)">
+      <text x="0" y="8" font-family="'Arial Black', sans-serif" font-size="22" font-weight="900" fill="#202a5e" text-anchor="middle" letter-spacing="0.5">n<tspan fill="#202a5e">i</tspan>rf</text>
+      <circle cx="-3" cy="-10" r="5" fill="#84223b" />
+      <circle cx="-3" cy="-10" r="5.5" fill="none" stroke="#84223b" stroke-width="0.8" stroke-dasharray="1,1" />
+      <path d="M -22,13 Q -10,9 0,13 Q 10,9 22,13 L 20,16 Q 10,12 0,16 Q -10,12 -20,16 Z" fill="#84223b" />
+      <path d="M -22,17 Q -10,14 0,17 Q 10,14 22,17 L 20,19 Q 10,16 0,19 Q -10,16 -20,19 Z" fill="#84223b" opacity="0.7"/>
+    </g>
+    <text x="49" y="80" class="text-sub">Ranked Institution</text>
+  </g>
+
+  <!-- ==================== 2. ANNA UNIVERSITY CARD ==================== -->
+  <g transform="translate(108, 3)">
+    <rect class="card-border" x="0" y="0" width="98" height="94" />
+    <g transform="translate(49, 30)">
+      <circle cx="0" cy="0" r="14" fill="none" stroke="#9e1a22" stroke-width="2.5" />
+      <path d="
+        M -2,-17 L 2,-17 L 1.5,-13 L -1.5,-13 Z
+        M 12,-12 L 15,-9 L 12,-7 L 9.5,-9.5 Z
+        M 15,-2 L 17,2 L 13,1.5 L 13,-1.5 Z
+        M 12,9 L 9.5,12 L 7,9.5 L 9.5,7 Z
+        M -2,13 L 2,17 L 1.5,13 L -1.5,13 Z
+        M -12,9 L -15,12 L -9.5,9.5 L -9.5,7 Z
+        M -17,-2 L -13,2 L -13,-1.5 L -17,-1.5 Z
+        M -12,-12 L -9.5,-15 L -7,-9.5 L -9.5,-9.5 Z
+      " fill="#9e1a22" />
+      <text x="0" y="-7" font-family="'Arial', sans-serif" font-size="3.8" font-weight="bold" fill="#9e1a22" text-anchor="middle">ANNA UNIVERSITY</text>
+      <path d="M -6,1 L -3,-4 L 0,-1 L 3,-4 L 6,1 Z" fill="#9e1a22" />
+      <path d="M -6,3 Q 0,2 6,3 L 5,6 Q 0,5 -5,6 Z" fill="#9e1a22" />
+      <rect x="-18" y="9" width="36" height="5" fill="#ffffff" stroke="#9e1a22" stroke-width="0.8"/>
+      <text x="0" y="13" font-family="'Arial', sans-serif" font-size="2.6" font-weight="bold" fill="#9e1a22" text-anchor="middle">PROGRESS THROUGH KNOWLEDGE</text>
+    </g>
+    <text x="49" y="68" class="text-sub">Affiliated to</text>
+    <text x="49" y="80" class="text-title">Anna University</text>
+  </g>
+
+  <!-- ==================== 3. SONA IS A SIRO CARD ==================== -->
+  <g transform="translate(212, 3)">
+    <rect class="card-border" x="0" y="0" width="98" height="94" />
+    <g transform="translate(49, 30)">
+      <circle cx="0" cy="0" r="17" fill="#da251d" />
+      <circle cx="0" cy="0" r="14.5" fill="#ffffff" />
+      <circle cx="0" cy="0" r="16" fill="none" stroke="#ffffff" stroke-width="0.5" stroke-dasharray="1,1"/>
+      <path d="M -2,-8 L 2,-8 L 1,-4 L -1,-4 Z M -3,-4 L 3,-4 L 2,0 L -2,0 Z" fill="#da251d" />
+      <rect x="-10" y="1" width="20" height="4.5" fill="#da251d" />
+      <text x="0" y="4.5" font-family="'Arial', sans-serif" font-size="3.5" font-weight="900" fill="#ffffff" text-anchor="middle">DSIR</text>
+      <text x="0" y="8" font-family="'Arial', sans-serif" font-size="2.2" font-weight="bold" fill="#da251d" text-anchor="middle">RECOGNIZED</text>
+    </g>
+    <text x="49" y="78" class="text-siro">SONA IS A SIRO</text>
+  </g>
+
+  <!-- ==================== 4. UGC CARD ==================== -->
+  <g transform="translate(316, 3)">
+    <rect class="card-border" x="0" y="0" width="98" height="94" />
+    <g transform="translate(49, 32)">
+      <circle cx="0" cy="-6" r="14" fill="none" stroke="#9e1a38" stroke-width="1" stroke-dasharray="1.5,1" />
+      <circle cx="0" cy="-6" r="12" fill="none" stroke="#9e1a38" stroke-width="1" />
+      <path d="M 0,-18 L 0,6 M -12,-6 L 12,-6 M -8.5,-14.5 L 8.5,2.5 M -8.5,2.5 L 8.5,-14.5 M -14.5,-8.5 L 2.5,8.5 M 2.5,-14.5 L -14.5,2.5" stroke="#9e1a38" stroke-width="0.7" />
+      <circle cx="0" cy="-6" r="4" fill="#ffffff" stroke="#9e1a38" stroke-width="1" />
+      <circle cx="0" cy="-6" r="1.5" fill="#9e1a38" />
+      <path d="M -16,4 Q 0,0 16,4 L 14,8 Q 0,4 -14,8 Z" fill="#9e1a38" />
+      <path d="M -15,8 Q 0,4 15,8 L 13,11 Q 0,7 -13,11 Z" fill="#9e1a38" />
+    </g>
+    <text x="49" y="66" class="text-hindi">ज्ञान-विज्ञान विमुक्तये</text>
+    <text x="49" y="80" class="text-title">Approved by UGC</text>
+  </g>
+
+  <!-- ==================== 5. AICTE CARD ==================== -->
+  <g transform="translate(420, 3)">
+    <rect class="card-border" x="0" y="0" width="98" height="94" />
+    <g transform="translate(49, 34)">
+      <circle cx="0" cy="0" r="16" fill="#f58220" />
+      <path d="
+        M -3,-18 L 3,-18 L 2.5,-15 L -2.5,-15 Z
+        M 10,-15 L 14,-11 L 11.5,-9 L 8,-12.5 Z
+        M 15,-3 L 18,3 L 15,2.5 L 12,-2.5 Z
+        M 11,10 L 14,14 L 9,11.5 L 8,8 Z
+        M -3,15 L 3,18 L -2.5,15 L -2.5,12 Z
+        M -14,11 L -10,14 L -8,11.5 L -11.5,8 Z
+        M -18,-3 L -15,3 L -12,2.5 L -15,-2.5 Z
+        M -14,-11 L -11,-15 L -8,-12.5 L -11.5,-9 Z
+      " fill="#f58220" />
+      <circle cx="0" cy="0" r="11" fill="#fdb913" stroke="#231f20" stroke-width="0.6" />
+      <text x="0" y="-3.5" font-family="'Arial Black', sans-serif" font-size="5" font-weight="bold" fill="#000000" text-anchor="middle">AICTE</text>
+      <path d="M -4,5 Q 0,3 4,5 Q 0,7 -4,5 Z" fill="#005bac" />
+      <path d="M 0,0 C -1.5,2 -1,4 0,5 C 1,4 1.5,2 0,0 Z" fill="#e30613" />
+    </g>
+    <text x="49" y="80" class="text-title">Approved by AICTE</text>
+  </g>
+
+  <!-- ==================== 6. NBA CARD ==================== -->
+  <g transform="translate(524, 3)">
+    <rect class="card-border" x="0" y="0" width="98" height="94" />
+    <g transform="translate(49, 32)">
+      <text x="0" y="8" font-family="'Impact', 'Arial Black', sans-serif" font-size="28" font-weight="900" fill="#00a7b5" text-anchor="middle" letter-spacing="1">NB<tspan fill="#00a7b5" font-size="24">A</tspan></text>
+      <line x1="-24" y1="12" x2="24" y2="12" stroke="#00a7b5" stroke-width="1.2" />
+    </g>
+    <text x="49" y="68" class="text-sub">All Eligible Programmes</text>
+    <text x="49" y="80" class="text-title">NBA Accredited</text>
+  </g>
+</svg>

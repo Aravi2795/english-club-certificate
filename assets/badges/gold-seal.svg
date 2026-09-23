@@ -1,0 +1,105 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 280" width="100%" height="100%">
+  <defs>
+    <!-- Rich 3D Metallic Gold Gradients -->
+    <radialGradient id="goldMedalRadial" cx="35%" cy="32%" r="68%">
+      <stop offset="0%" stop-color="#FFFBE6" />
+      <stop offset="18%" stop-color="#FFE79A" />
+      <stop offset="42%" stop-color="#E8BE4D" />
+      <stop offset="70%" stop-color="#C59324" />
+      <stop offset="90%" stop-color="#93670B" />
+      <stop offset="100%" stop-color="#5E3F02" />
+    </radialGradient>
+
+    <radialGradient id="goldInnerDome" cx="40%" cy="35%" r="65%">
+      <stop offset="0%" stop-color="#FFFFF0" />
+      <stop offset="25%" stop-color="#FEEA9E" />
+      <stop offset="55%" stop-color="#D9A832" />
+      <stop offset="85%" stop-color="#A27110" />
+      <stop offset="100%" stop-color="#684503" />
+    </radialGradient>
+
+    <linearGradient id="goldRingGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFF9D2" />
+      <stop offset="30%" stop-color="#D4A72C" />
+      <stop offset="50%" stop-color="#FFF2B2" />
+      <stop offset="75%" stop-color="#9E7010" />
+      <stop offset="100%" stop-color="#E5BA42" />
+    </linearGradient>
+
+    <linearGradient id="ribbonLeftGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F5D065" />
+      <stop offset="40%" stop-color="#CF9D28" />
+      <stop offset="80%" stop-color="#966A0C" />
+      <stop offset="100%" stop-color="#5C3F03" />
+    </linearGradient>
+
+    <linearGradient id="ribbonRightGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFF0A8" />
+      <stop offset="45%" stop-color="#DCAB35" />
+      <stop offset="85%" stop-color="#A07212" />
+      <stop offset="100%" stop-color="#604104" />
+    </linearGradient>
+
+    <!-- Drop Shadow -->
+    <filter id="medalShadow" x="-20%" y="-15%" width="140%" height="140%">
+      <feDropShadow dx="3" dy="8" stdDeviation="6" flood-color="#1a1202" flood-opacity="0.45"/>
+    </filter>
+  </defs>
+
+  <g filter="url(#medalShadow)">
+    <!-- Left Ribbon Tail (Notched at bottom, angled ~-22deg) -->
+    <g transform="translate(120, 115) rotate(-22)">
+      <path d="M -30,0 L -42,120 L -15,100 L 12,120 L 0,0 Z" fill="url(#ribbonLeftGrad)" stroke="#7A5308" stroke-width="0.8"/>
+      <!-- Ribbon Crease Highlight -->
+      <path d="M -15,0 L -15,100 L -42,120 Z" fill="#ffffff" opacity="0.12"/>
+    </g>
+
+    <!-- Right Ribbon Tail (Notched at bottom, angled ~22deg) -->
+    <g transform="translate(120, 115) rotate(22)">
+      <path d="M 0,0 L -12,120 L 15,100 L 42,120 L 30,0 Z" fill="url(#ribbonRightGrad)" stroke="#7A5308" stroke-width="0.8"/>
+      <!-- Ribbon Crease Highlight -->
+      <path d="M 15,0 L 15,100 L 42,120 Z" fill="#000000" opacity="0.12"/>
+    </g>
+
+    <!-- Main Circular Rosette with 28 Scalloped Teeth / Ruffles -->
+    <!-- Center of Medallion: (120, 105), Outer Radius: ~85px -->
+    <path d="
+      M 120,20
+      L 129,22 L 138,27 L 148,27 L 156,34 L 165,37 L 171,46 L 180,51 L 184,62 L 191,69 L 193,80 L 197,89 L 196,100 L 197,111 L 193,120 L 191,131 L 184,138 L 180,149 L 171,154 L 165,163 L 156,166 L 148,173 L 138,173 L 129,178 L 120,176
+      L 111,178 L 102,173 L 92,173 L 84,166 L 75,163 L 69,154 L 60,149 L 56,138 L 49,131 L 47,120 L 43,111 L 44,100 L 43,89 L 47,80 L 49,69 L 56,62 L 60,51 L 69,46 L 75,37 L 84,34 L 92,27 L 102,27 L 111,22 Z"
+      fill="url(#goldMedalRadial)" stroke="#785006" stroke-width="1.2"/>
+
+    <!-- Concentric Outer Ring 1 -->
+    <circle cx="120" cy="98" r="68" fill="none" stroke="url(#goldRingGrad)" stroke-width="3"/>
+    
+    <!-- Concentric Beaded / Serrated Gold Ring -->
+    <circle cx="120" cy="98" r="64" fill="none" stroke="#664303" stroke-width="1.2" stroke-dasharray="2,2"/>
+    <circle cx="120" cy="98" r="61" fill="none" stroke="#FFF7C8" stroke-width="1.8"/>
+
+    <!-- Inner Metallic Gold Dome -->
+    <circle cx="120" cy="98" r="58" fill="url(#goldInnerDome)" stroke="#8C620B" stroke-width="1.5"/>
+
+    <!-- Dynamic Radial 3D Metallic Facet Beams (Creates the Authentic Sunburst Shine) -->
+    <g opacity="0.35">
+      <path d="M 120,98 L 95,45 L 120,40 Z" fill="#ffffff"/>
+      <path d="M 120,98 L 145,45 L 120,40 Z" fill="#ffeaa7"/>
+      <path d="M 120,98 L 173,73 L 178,98 Z" fill="#ffffff"/>
+      <path d="M 120,98 L 173,123 L 178,98 Z" fill="#422900" opacity="0.4"/>
+      <path d="M 120,98 L 145,151 L 120,156 Z" fill="#422900" opacity="0.4"/>
+      <path d="M 120,98 L 95,151 L 120,156 Z" fill="#ffffff"/>
+      <path d="M 120,98 L 67,123 L 62,98 Z" fill="#ffffff"/>
+      <path d="M 120,98 L 67,73 L 62,98 Z" fill="#422900" opacity="0.4"/>
+    </g>
+
+    <!-- Inner Core Rings -->
+    <circle cx="120" cy="98" r="42" fill="none" stroke="url(#goldRingGrad)" stroke-width="2.5"/>
+    <circle cx="120" cy="98" r="39" fill="none" stroke="#7A5308" stroke-width="0.8" stroke-dasharray="1.5,1.5"/>
+    <circle cx="120" cy="98" r="36" fill="url(#goldMedalRadial)" stroke="#FFE896" stroke-width="1.2"/>
+
+    <!-- Center Concentric Starburst Disc -->
+    <circle cx="120" cy="98" r="22" fill="url(#goldInnerDome)" stroke="#D4A72C" stroke-width="1.5"/>
+    
+    <!-- Top-Left Highlight Glare Arc -->
+    <path d="M 80,72 A 52 52 0 0 1 155,62" fill="none" stroke="#ffffff" stroke-width="2.5" opacity="0.5" stroke-linecap="round"/>
+  </g>
+</svg>

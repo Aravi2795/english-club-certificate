@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 120" width="100%" height="100%">
+  <!-- Sona Blue Background -->
+  <rect width="360" height="120" fill="#1b467e" />
+
+  <!-- SONA Yellow Main Text -->
+  <text x="18" y="70" font-family="'Arial Black', 'Impact', 'Franklin Gothic Heavy', sans-serif" font-size="62" font-weight="900" fill="#fdb913" letter-spacing="1">SONA</text>
+
+  <!-- COLLEGE OF TECHNOLOGY -->
+  <text x="192" y="38" font-family="'Arial Black', 'Impact', 'Franklin Gothic Medium', sans-serif" font-size="21" font-weight="900" fill="#fdb913" letter-spacing="0.5">COLLEGE OF</text>
+  <text x="192" y="66" font-family="'Arial Black', 'Impact', 'Franklin Gothic Medium', sans-serif" font-size="23.5" font-weight="900" fill="#fdb913" letter-spacing="0.5">TECHNOLOGY</text>
+
+  <!-- White Separator Line -->
+  <line x1="20" y1="78" x2="342" y2="78" stroke="#ffffff" stroke-width="1.8" />
+
+  <!-- Learning is a Celebration! Italic White Text -->
+  <text x="20" y="104" font-family="'Arial', 'Helvetica', sans-serif" font-size="21.5" font-style="italic" font-weight="bold" fill="#ffffff" letter-spacing="0.5">Learning is a Celebration!</text>
+</svg>

@@ -114,8 +114,8 @@ class CertificateRenderer {
 
     const coord1Title = settings.coordinator1Title || 'CLUB CO-ORDINATOR';
     const coord2Title = settings.coordinator2Title || 'CLUB CO-COORDINATOR';
-    const coord1SignUrl = (settings.coordinator1SignUrl && !settings.coordinator1SignUrl.startsWith('assets/')) ? settings.coordinator1SignUrl : `${rootUrl}assets/signatures/signature-coordinator.svg`;
-    const coord2SignUrl = (settings.coordinator2SignUrl && !settings.coordinator2SignUrl.startsWith('assets/')) ? settings.coordinator2SignUrl : `${rootUrl}assets/signatures/signature-parthasarathi.svg`;
+    const coord1SignUrl = (settings.coordinator1SignUrl && !settings.coordinator1SignUrl.startsWith('assets/') && !settings.coordinator1SignUrl.endsWith('.svg')) ? settings.coordinator1SignUrl : `${rootUrl}assets/signatures/signature-coordinator.png`;
+    const coord2SignUrl = (settings.coordinator2SignUrl && !settings.coordinator2SignUrl.startsWith('assets/') && !settings.coordinator2SignUrl.endsWith('.svg')) ? settings.coordinator2SignUrl : `${rootUrl}assets/signatures/signature-parthasarathi.png`;
 
     return `
       <div class="cert-sheet" id="cert-${certId}" data-cert-id="${certId}">

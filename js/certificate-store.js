@@ -17,10 +17,10 @@ const DEFAULT_SETTINGS = {
   issueDate: '24-09-2026',
   
   coordinator1Title: 'CLUB CO-ORDINATOR',
-  coordinator1SignUrl: 'assets/signatures/signature-coordinator.svg',
+  coordinator1SignUrl: 'assets/signatures/signature-coordinator.png',
 
   coordinator2Title: 'CLUB CO-COORDINATOR',
-  coordinator2SignUrl: 'assets/signatures/signature-parthasarathi.svg',
+  coordinator2SignUrl: 'assets/signatures/signature-parthasarathi.png',
   
   sealUrl: 'assets/badges/gold-seal.svg',
   
@@ -146,7 +146,21 @@ class CertificateStore {
 
   getSettings() {
     try {
-      return JSON.parse(localStorage.getItem(STORAGE_KEYS.SETTINGS)) || DEFAULT_SETTINGS;
+      const settings = JSON.parse(localStorage.getItem(STORAGE_KEYS.SETTINGS)) || DEFAULT_SETTINGS;
+      // Auto-migrate legacy SVG signatures to PNG
+      let modified = false;
+      if (settings.coordinator1SignUrl && settings.coordinator1SignUrl.endsWith('signature-coordinator.svg')) {
+        settings.coordinator1SignUrl = 'assets/signatures/signature-coordinator.png';
+        modified = true;
+      }
+      if (settings.coordinator2SignUrl && settings.coordinator2SignUrl.endsWith('signature-parthasarathi.svg')) {
+        settings.coordinator2SignUrl = 'assets/signatures/signature-parthasarathi.png';
+        modified = true;
+      }
+      if (modified) {
+        localStorage.setItem(STORAGE_KEYS.SETTINGS, JSON.stringify(settings));
+      }
+      return settings;
     } catch (e) {
       return DEFAULT_SETTINGS;
     }

@@ -5,6 +5,69 @@
 class CertificatePDFGenerator {
   constructor() {}
 
+  /**
+   * Converts an image element or URL to a base64 Data URL for 100% reliable canvas rendering.
+   */
+  async imageToDataURL(imgElement) {
+    if (!imgElement) return null;
+    if (imgElement.src && imgElement.src.startsWith('data:')) {
+      return imgElement.src;
+    }
+
+    return new Promise((resolve) => {
+      try {
+        const img = new Image();
+        img.crossOrigin = 'anonymous';
+        img.onload = () => {
+          try {
+            const canvas = document.createElement('canvas');
+            canvas.width = img.naturalWidth || img.width || 300;
+            canvas.height = img.naturalHeight || img.height || 100;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0);
+            const dataUrl = canvas.toDataURL('image/png');
+            resolve(dataUrl);
+          } catch (e) {
+            resolve(imgElement.src);
+          }
+        };
+        img.onerror = () => resolve(imgElement.src);
+        img.src = imgElement.src;
+      } catch (err) {
+        resolve(imgElement.src);
+      }
+    });
+  }
+
+  /**
+   * Prepares and waits for all images within a certificate element to be loaded.
+   */
+  async prepareCertificateForExport(element) {
+    const images = Array.from(element.querySelectorAll('img'));
+    
+    // Ensure all images are fully loaded and converted to Data URLs if possible
+    await Promise.all(images.map(async (img) => {
+      if (!img.complete || img.naturalWidth === 0) {
+        await new Promise((res) => {
+          img.onload = res;
+          img.onerror = res;
+          setTimeout(res, 2000); // 2s safety timeout
+        });
+      }
+      try {
+        const dataUrl = await this.imageToDataURL(img);
+        if (dataUrl && dataUrl.startsWith('data:')) {
+          img.src = dataUrl;
+        }
+      } catch (e) {
+        // Continue if conversion fails
+      }
+    }));
+
+    // Allow CSS layout recalculation
+    await new Promise(r => setTimeout(r, 100));
+  }
+
   async exportToPNG(elementId, filename = 'Certificate.png') {
     const element = typeof elementId === 'string' ? document.getElementById(elementId) : elementId;
     if (!element) {
@@ -18,11 +81,13 @@ class CertificatePDFGenerator {
         return true;
       }
 
-      // High-DPI capture with fixed 1000x707 dimensions (mobile safe)
+      await this.prepareCertificateForExport(element);
+
+      // High-DPI capture with fixed 1000x707 dimensions
       const canvas = await html2canvas(element, {
         scale: 3,
         useCORS: true,
-        allowTaint: true,
+        allowTaint: false,
         backgroundColor: '#ffffff',
         logging: false,
         width: 1000,
@@ -30,7 +95,14 @@ class CertificatePDFGenerator {
         windowWidth: 1200,
         imageTimeout: 15000,
         scrollX: 0,
-        scrollY: 0
+        scrollY: 0,
+        onclone: (clonedDoc) => {
+          const clonedCert = clonedDoc.getElementById(element.id);
+          if (clonedCert) {
+            clonedCert.style.transform = 'none';
+            clonedCert.style.margin = '0';
+          }
+        }
       });
 
       canvas.toBlob((blob) => {
@@ -46,9 +118,17 @@ class CertificatePDFGenerator {
 
       return true;
     } catch (err) {
-      console.error('PNG export failed:', err);
-      window.print();
-      return false;
+      console.error('PNG export failed, falling back to direct canvas capture:', err);
+      try {
+        // Fallback without strict taint
+        const canvas = await html2canvas(element, { scale: 2, useCORS: true, allowTaint: true });
+        const dataUrl = canvas.toDataURL('image/png');
+        this.triggerDownload(dataUrl, filename);
+        return true;
+      } catch (fallbackErr) {
+        window.print();
+        return false;
+      }
     }
   }
 
@@ -67,11 +147,13 @@ class CertificatePDFGenerator {
 
       const jsPDF = window.jspdf ? window.jspdf.jsPDF : window.jsPDF;
 
+      await this.prepareCertificateForExport(element);
+
       // Capture canvas at 3x scale with explicit dimensions
       const canvas = await html2canvas(element, {
         scale: 3,
         useCORS: true,
-        allowTaint: true,
+        allowTaint: false,
         backgroundColor: '#ffffff',
         logging: false,
         width: 1000,
@@ -79,7 +161,14 @@ class CertificatePDFGenerator {
         windowWidth: 1200,
         imageTimeout: 15000,
         scrollX: 0,
-        scrollY: 0
+        scrollY: 0,
+        onclone: (clonedDoc) => {
+          const clonedCert = clonedDoc.getElementById(element.id);
+          if (clonedCert) {
+            clonedCert.style.transform = 'none';
+            clonedCert.style.margin = '0';
+          }
+        }
       });
 
       const imgData = canvas.toDataURL('image/jpeg', 0.98);

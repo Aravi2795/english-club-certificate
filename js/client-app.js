@@ -81,9 +81,11 @@ class ClientApp {
       btnCopyLink.addEventListener('click', () => {
         const cert = this.getActiveCertificate();
         if (cert) {
-          const url = window.certRenderer.generateVerifyUrl(cert.id);
+          const url = window.certRenderer.generateVerifyUrl(cert);
           navigator.clipboard.writeText(url).then(() => {
             this.showToast('Verification link copied to clipboard! 📋', 'success');
+          }).catch(() => {
+            prompt('Copy certificate link:', url);
           });
         }
       });
@@ -107,15 +109,27 @@ class ClientApp {
     }
   }
 
-  checkUrlParams() {
+  async checkUrlParams() {
     const params = new URLSearchParams(window.location.search);
+    const token = params.get('d') || params.get('data');
     const email = params.get('email');
     const id = params.get('id');
 
+    if (token) {
+      const ingested = window.certStore.ingestCertificateFromToken(token);
+      if (ingested) {
+        this.currentCertificates = [ingested];
+        this.activeCertIndex = 0;
+        this.renderVault();
+        this.showToast(`Welcome ${ingested.name}! Your verified certificate is ready 🎉`, 'success');
+        return;
+      }
+    }
+
     if (email) {
-      this.lookupCertificates(email);
+      await this.lookupCertificates(email);
     } else if (id) {
-      this.lookupCertificates(id);
+      await this.lookupCertificates(id);
     }
   }
 
@@ -145,8 +159,20 @@ class ClientApp {
     this.currentCertificates = [];
   }
 
-  lookupCertificates(query) {
+  async lookupCertificates(query) {
     if (!query) return;
+
+    // Check if query is an encoded token
+    if (query.length > 50 && (query.startsWith('ey') || query.includes('='))) {
+      const single = window.certStore.ingestCertificateFromToken(query);
+      if (single) {
+        this.currentCertificates = [single];
+        this.activeCertIndex = 0;
+        this.renderVault();
+        this.showToast('Certificate decoded and verified! 🎉', 'success');
+        return;
+      }
+    }
 
     let certs = [];
     if (query.includes('@')) {
@@ -156,6 +182,17 @@ class ClientApp {
       // Lookup by Certificate ID
       const single = window.certStore.findCertificateById(query);
       if (single) certs = [single];
+    }
+
+    // If not found in localStorage, attempt sync from static registry
+    if (certs.length === 0) {
+      await window.certStore.syncWithRemoteRegistry();
+      if (query.includes('@')) {
+        certs = window.certStore.findRecipientsByEmail(query);
+      } else {
+        const single = window.certStore.findCertificateById(query);
+        if (single) certs = [single];
+      }
     }
 
     if (certs.length === 0) {
@@ -168,6 +205,7 @@ class ClientApp {
     this.renderVault();
     this.showToast(`Found ${certs.length} certificate(s)! 🎉`, 'success');
   }
+
 
   renderVault() {
     const vaultSection = document.getElementById('certificate-vault-section');

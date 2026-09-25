@@ -1,0 +1,79 @@
+[
+  {
+    "id": "TCC-2026-PAR-8801",
+    "name": "Arjun S",
+    "email": "arjun.s@sonatech.ac.in",
+    "category": "participant",
+    "department": "Computer Science & Engineering",
+    "roleNote": "Distinguished Finalist",
+    "status": "Sent",
+    "issueDate": "24-09-2026",
+    "eventName": "Prelims - Eloquence"
+  },
+  {
+    "id": "TCC-2026-ORG-9012",
+    "name": "Priya Dharshini R",
+    "email": "priya.organizer@sonatech.ac.in",
+    "category": "organiser",
+    "department": "Information Technology",
+    "roleNote": "Lead Student Coordinator",
+    "status": "Sent",
+    "issueDate": "24-09-2026",
+    "eventName": "Prelims - Eloquence"
+  },
+  {
+    "id": "TCC-2026-ORG-9013",
+    "name": "Kavitha M",
+    "email": "kavitha.m@sonatech.ac.in",
+    "category": "organiser",
+    "department": "Electronics & Communication Engineering",
+    "roleNote": "Event Host / Master of Ceremonies",
+    "status": "Pending",
+    "issueDate": "24-09-2026",
+    "eventName": "Prelims - Eloquence"
+  },
+  {
+    "id": "TCC-2026-PAR-8802",
+    "name": "Karthik Raja V",
+    "email": "karthik.raja@sonatech.ac.in",
+    "category": "participant",
+    "department": "Mechanical Engineering",
+    "roleNote": "Top Finalist",
+    "status": "Pending",
+    "issueDate": "24-09-2026",
+    "eventName": "Prelims - Eloquence"
+  },
+  {
+    "id": "TCC-2026-PAR-8803",
+    "name": "Sneha Mohan",
+    "email": "sneha.mohan@gmail.com",
+    "category": "participant",
+    "department": "Artificial Intelligence & Data Science",
+    "roleNote": "Merit Achievement",
+    "status": "Sent",
+    "issueDate": "24-09-2026",
+    "eventName": "Prelims - Eloquence"
+  },
+  {
+    "id": "TCC-2026-ORG-9014",
+    "name": "Ramesh Kumar S",
+    "email": "ramesh.kumar@sonatech.ac.in",
+    "category": "organiser",
+    "department": "Civil Engineering",
+    "roleNote": "Logistics & Stage Head",
+    "status": "Pending",
+    "issueDate": "24-09-2026",
+    "eventName": "Prelims - Eloquence"
+  },
+  {
+    "id": "TCC-2026-PAR-8804",
+    "name": "Deepa N",
+    "email": "deepa.n@sonatech.ac.in",
+    "category": "participant",
+    "department": "Electrical & Electronics Engineering",
+    "roleNote": "Special Mention",
+    "status": "Pending",
+    "issueDate": "24-09-2026",
+    "eventName": "Prelims - Eloquence"
+  }
+]

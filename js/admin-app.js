@@ -365,6 +365,7 @@ class AdminApp {
         <td>
           <div style="display:flex; gap:6px;">
             <button class="btn btn-secondary btn-sm" onclick="window.adminApp.previewRecipient('${r.id}')" title="Preview Certificate">👁</button>
+            <button class="btn btn-secondary btn-sm" onclick="window.adminApp.copyCertLink('${r.id}')" title="Copy Verifiable Certificate Link">🔗</button>
             <button class="btn btn-secondary btn-sm" onclick="window.adminApp.sendDirectMail('${r.id}')" title="Send Email">✉</button>
             <button class="btn btn-secondary btn-sm" style="color:#f43f5e;" onclick="window.adminApp.deleteRecipient('${r.id}')" title="Delete">🗑</button>
           </div>
@@ -412,6 +413,31 @@ class AdminApp {
       window.certRenderer.mountCertificate(container, recipient);
       modal.style.display = 'flex';
     }
+  }
+
+  copyCertLink(id) {
+    const recipient = window.certStore.findCertificateById(id);
+    if (!recipient) return;
+    const url = window.certRenderer.generateVerifyUrl(recipient);
+    navigator.clipboard.writeText(url).then(() => {
+      this.showToast(`Verifiable link copied for ${recipient.name}! 📋`, 'success');
+    }).catch(() => {
+      prompt('Copy certificate link:', url);
+    });
+  }
+
+  exportPublicRegistry() {
+    const jsonStr = window.certStore.exportRegistryJSON();
+    const blob = new Blob([jsonStr], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'recipients.json';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    this.showToast('Downloaded recipients.json registry file! Place in /data folder for public sync.', 'success');
   }
 
   sendDirectMail(id) {
@@ -482,4 +508,10 @@ class AdminApp {
 
 document.addEventListener('DOMContentLoaded', () => {
   window.adminApp = new AdminApp();
+  
+  // Connect export registry button
+  document.getElementById('btn-export-registry')?.addEventListener('click', () => {
+    window.adminApp.exportPublicRegistry();
+  });
 });
+

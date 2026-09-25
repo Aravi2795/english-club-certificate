@@ -6,10 +6,64 @@
 class CertificateRenderer {
   constructor() {}
 
-  generateVerifyUrl(certId) {
+  generateVerifyUrl(recipientOrId, customSettings = null) {
     const origin = window.location.origin && window.location.origin !== 'null' ? window.location.origin : '';
-    const pathname = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/') + 1);
+    let pathname = window.location.pathname || '';
+    if (pathname.includes('/admin.html') || pathname.includes('/verify.html') || pathname.includes('/index.html')) {
+      pathname = pathname.substring(0, pathname.lastIndexOf('/') + 1);
+    } else if (!pathname.endsWith('/')) {
+      pathname = pathname + '/';
+    }
+
+    let recipient = null;
+    let certId = '';
+
+    if (typeof recipientOrId === 'object' && recipientOrId !== null) {
+      recipient = recipientOrId;
+      certId = recipient.id || '';
+    } else if (typeof recipientOrId === 'string') {
+      certId = recipientOrId.trim();
+      recipient = window.certStore ? window.certStore.findCertificateById(certId) : null;
+    }
+
+    const settings = customSettings || (window.certStore ? window.certStore.getSettings() : null);
+
+    if (recipient && window.certStore) {
+      const token = window.certStore.encodeCertificateData(recipient, settings);
+      return `${origin}${pathname}verify.html?id=${encodeURIComponent(certId || recipient.id)}&d=${encodeURIComponent(token)}`;
+    }
+
     return `${origin}${pathname}verify.html?id=${encodeURIComponent(certId)}`;
+  }
+
+  generateClaimUrl(recipientOrId, customSettings = null) {
+    const origin = window.location.origin && window.location.origin !== 'null' ? window.location.origin : '';
+    let pathname = window.location.pathname || '';
+    if (pathname.includes('/admin.html') || pathname.includes('/verify.html') || pathname.includes('/index.html')) {
+      pathname = pathname.substring(0, pathname.lastIndexOf('/') + 1);
+    } else if (!pathname.endsWith('/')) {
+      pathname = pathname + '/';
+    }
+
+    let recipient = null;
+    let certId = '';
+
+    if (typeof recipientOrId === 'object' && recipientOrId !== null) {
+      recipient = recipientOrId;
+      certId = recipient.id || '';
+    } else if (typeof recipientOrId === 'string') {
+      certId = recipientOrId.trim();
+      recipient = window.certStore ? window.certStore.findCertificateById(certId) : null;
+    }
+
+    const settings = customSettings || (window.certStore ? window.certStore.getSettings() : null);
+
+    if (recipient && window.certStore) {
+      const token = window.certStore.encodeCertificateData(recipient, settings);
+      return `${origin}${pathname}index.html?id=${encodeURIComponent(certId || recipient.id)}&d=${encodeURIComponent(token)}`;
+    }
+
+    return `${origin}${pathname}index.html?id=${encodeURIComponent(certId)}`;
   }
 
   compileCitationText(templateStr, data) {
@@ -27,7 +81,7 @@ class CertificateRenderer {
 
   renderCertificateHTML(recipient, customSettings = null) {
     const settings = customSettings || window.certStore.getSettings();
-    const certId = recipient.id || window.certStore.generateCertificateId(recipient.category);
+    const certId = recipient.id || (window.certStore ? window.certStore.generateCertificateId(recipient.category) : 'TCC-2026-PAR-0000');
     const recipientName = recipient.name || '';
     const issueDate = recipient.issueDate || settings.issueDate || '24-09-2026';
     const eventName = recipient.eventName || settings.eventName || 'Prelims - Eloquence';
@@ -151,8 +205,15 @@ class CertificateRenderer {
             </div>
           </div>
 
-          <!-- Discrete Digital Authentication ID Tag -->
-          <div class="cert-verify-micro-tag">ID: ${certId}</div>
+          <!-- Official Verification Security Stamp & Micro QR Code -->
+          <div class="cert-auth-stamp">
+            <div class="cert-qr-box" id="cert-qr-${certId}"></div>
+            <div class="cert-auth-meta">
+              <span class="cert-tag-title">OFFICIAL TRUST REGISTRY</span>
+              <span class="cert-tag-id">ID: ${certId}</span>
+              <span class="cert-tag-verify">sonatech.ac.in/verify</span>
+            </div>
+          </div>
 
         </div>
       </div>
@@ -162,7 +223,32 @@ class CertificateRenderer {
   mountCertificate(container, recipient, customSettings = null) {
     if (!container) return;
     container.innerHTML = this.renderCertificateHTML(recipient, customSettings);
+
+    // Mount dynamic QR code on the certificate sheet
+    const certId = recipient.id || '';
+    const qrBox = container.querySelector(`#cert-qr-${certId}`);
+    if (qrBox) {
+      const verifyUrl = this.generateVerifyUrl(recipient, customSettings);
+      try {
+        if (typeof QRCode !== 'undefined') {
+          qrBox.innerHTML = '';
+          new QRCode(qrBox, {
+            text: verifyUrl,
+            width: 52,
+            height: 52,
+            colorDark: "#111827",
+            colorLight: "#ffffff",
+            correctLevel: QRCode.CorrectLevel.M
+          });
+        } else {
+          qrBox.innerHTML = `<img src="https://api.qrserver.com/v1/create-qr-code/?size=52x52&data=${encodeURIComponent(verifyUrl)}" alt="QR" style="width:52px;height:52px;" />`;
+        }
+      } catch (e) {
+        qrBox.innerHTML = `<img src="https://api.qrserver.com/v1/create-qr-code/?size=52x52&data=${encodeURIComponent(verifyUrl)}" alt="QR" style="width:52px;height:52px;" />`;
+      }
+    }
   }
 }
 
 window.certRenderer = new CertificateRenderer();
+

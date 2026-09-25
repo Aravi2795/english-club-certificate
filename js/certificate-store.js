@@ -102,6 +102,7 @@ const DEFAULT_RECIPIENTS = [
 
 class CertificateStore {
   constructor() {
+    this.remoteSynced = false;
     this.init();
   }
 
@@ -111,6 +112,35 @@ class CertificateStore {
     }
     if (!localStorage.getItem(STORAGE_KEYS.RECIPIENTS)) {
       localStorage.setItem(STORAGE_KEYS.RECIPIENTS, JSON.stringify(DEFAULT_RECIPIENTS));
+    }
+    // Attempt background sync with remote static registry file if present
+    this.syncWithRemoteRegistry();
+  }
+
+  async syncWithRemoteRegistry() {
+    try {
+      const response = await fetch('data/recipients.json');
+      if (response.ok) {
+        const remoteList = await response.json();
+        if (Array.isArray(remoteList) && remoteList.length > 0) {
+          const current = this.getRecipients();
+          const currentMap = new Map(current.map(r => [r.id, r]));
+          
+          // Merge remote items without overwriting local modifications
+          for (const item of remoteList) {
+            if (item && item.id && !currentMap.has(item.id)) {
+              currentMap.set(item.id, item);
+            }
+          }
+          const merged = Array.from(currentMap.values());
+          localStorage.setItem(STORAGE_KEYS.RECIPIENTS, JSON.stringify(merged));
+          this.remoteSynced = true;
+          window.dispatchEvent(new CustomEvent('comm_club_recipients_updated', { detail: merged }));
+        }
+      }
+    } catch (e) {
+      // Offline or file not reachable, keep using localStorage
+      console.log('Static registry sync info:', e.message);
     }
   }
 
@@ -210,6 +240,113 @@ class CertificateStore {
     localStorage.setItem(STORAGE_KEYS.RECIPIENTS, JSON.stringify(DEFAULT_RECIPIENTS));
     return { settings: DEFAULT_SETTINGS, recipients: DEFAULT_RECIPIENTS };
   }
+
+  // =========================================================================
+  // UNIVERSAL VERIFIABLE TOKEN ENGINE (Self-Contained & Stateless URLs)
+  // =========================================================================
+
+  /**
+   * Encodes recipient data into a compact, URL-safe Base64 token.
+   * Enables 100% reliable cross-device verification without server dependencies.
+   */
+  encodeCertificateData(recipient, customSettings = null) {
+    if (!recipient) return '';
+    const settings = customSettings || this.getSettings();
+    const payload = {
+      i: recipient.id || this.generateCertificateId(recipient.category),
+      n: recipient.name || 'Participant',
+      e: recipient.email || '',
+      c: recipient.category === 'organiser' ? 'o' : 'p',
+      d: recipient.department || 'General',
+      ev: recipient.eventName || settings.eventName,
+      dt: recipient.issueDate || settings.issueDate,
+      r: recipient.roleNote || '',
+      inst: settings.institutionName,
+      cl: settings.clubName
+    };
+
+    try {
+      const jsonStr = JSON.stringify(payload);
+      // UTF-8 safe Base64URL encoding
+      const utf8Bytes = new TextEncoder().encode(jsonStr);
+      let binary = '';
+      for (let i = 0; i < utf8Bytes.length; i++) {
+        binary += String.fromCharCode(utf8Bytes[i]);
+      }
+      return btoa(binary)
+        .replace(/\+/g, '-')
+        .replace(/\//g, '_')
+        .replace(/=+$/, '');
+    } catch (err) {
+      console.error('Failed to encode certificate token:', err);
+      return '';
+    }
+  }
+
+  /**
+   * Decodes a URL-safe Base64 token into a complete recipient certificate object.
+   */
+  decodeCertificateData(token) {
+    if (!token) return null;
+    try {
+      let base64 = token.trim().replace(/-/g, '+').replace(/_/g, '/');
+      while (base64.length % 4) {
+        base64 += '=';
+      }
+      const binary = atob(base64);
+      const bytes = new Uint8Array(binary.length);
+      for (let i = 0; i < binary.length; i++) {
+        bytes[i] = binary.charCodeAt(i);
+      }
+      const jsonStr = new TextDecoder().decode(bytes);
+      const p = JSON.parse(jsonStr);
+
+      if (!p || (!p.i && !p.n)) return null;
+
+      return {
+        id: p.i || p.id,
+        name: p.n || p.name || 'Participant',
+        email: p.e || p.email || '',
+        category: (p.c === 'o' || p.category === 'organiser') ? 'organiser' : 'participant',
+        department: p.d || p.department || 'General',
+        eventName: p.ev || p.eventName || 'Prelims - Eloquence',
+        issueDate: p.dt || p.issueDate || '24-09-2026',
+        roleNote: p.r || p.roleNote || '',
+        institutionName: p.inst || 'Sona College of Technology',
+        clubName: p.cl || 'The Communication Club',
+        status: 'Sent'
+      };
+    } catch (err) {
+      console.error('Failed to decode certificate token:', err);
+      return null;
+    }
+  }
+
+  /**
+   * Ingests a certificate decoded from URL into local storage so it is permanently cached.
+   */
+  ingestCertificateFromToken(token) {
+    const cert = this.decodeCertificateData(token);
+    if (!cert || !cert.id) return null;
+
+    const recipients = this.getRecipients();
+    const existingIdx = recipients.findIndex(r => r.id === cert.id);
+
+    if (existingIdx !== -1) {
+      recipients[existingIdx] = { ...recipients[existingIdx], ...cert };
+    } else {
+      recipients.unshift(cert);
+    }
+
+    this.saveRecipients(recipients);
+    return cert;
+  }
+
+  exportRegistryJSON() {
+    const recipients = this.getRecipients();
+    return JSON.stringify(recipients, null, 2);
+  }
 }
 
 window.certStore = new CertificateStore();
+

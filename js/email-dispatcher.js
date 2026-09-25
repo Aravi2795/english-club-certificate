@@ -6,14 +6,14 @@ class EmailDispatcher {
   constructor() {
     this.isDispatching = false;
     this.emailTemplate = {
-      subject: "Your Official E-Certificate from THE COMMUNICATION CLUB - {{eventName}}",
-      body: "Dear {{name}},\n\nCongratulations! We are delighted to present your official E-Certificate for your role as {{category}} in '{{eventName}}' organized by The Communication Club, Sona College of Technology.\n\nYou can view, download your high-resolution certificate, and verify its authenticity at any time using your unique Certificate ID: {{id}}\n\nDirect Certificate Link:\n{{certificateLink}}\n\nWarm regards,\nClub Coordinator,\nThe Communication Club,\nSona College of Technology"
+      subject: "Official E-Certificate: {{eventName}} - The Communication Club",
+      body: "Dear {{name}},\n\nCongratulations! We are delighted to present your official E-Certificate for your role as {{category}} in '{{eventName}}' organized by The Communication Club, Sona College of Technology.\n\nYou can view, verify its authenticity, and download your high-resolution Certificate (PDF & PNG) directly via this link:\n\n🔗 Official Certificate Link:\n{{certificateLink}}\n\n📜 Certificate Details:\n• Certificate ID: {{id}}\n• Recipient: {{name}}\n• Role: {{category}}\n• Event: {{eventName}}\n• Date of Issue: {{issueDate}}\n\nWarm regards,\nClub Coordinator,\nThe Communication Club,\nSona College of Technology (Autonomous)"
     };
   }
 
   compileEmail(recipient, settings) {
-    const certUrl = window.certRenderer.generateVerifyUrl(recipient.id);
-    const categoryName = recipient.category === 'organiser' ? 'an Organiser' : 'a Distinguished Participant';
+    const certUrl = window.certRenderer.generateVerifyUrl(recipient, settings);
+    const categoryName = recipient.category === 'organiser' ? 'an Organiser & Coordinator' : 'a Distinguished Participant';
 
     const subject = this.emailTemplate.subject
       .replace(/{{eventName}}/g, recipient.eventName || settings.eventName)
@@ -24,6 +24,7 @@ class EmailDispatcher {
       .replace(/{{category}}/g, categoryName)
       .replace(/{{eventName}}/g, recipient.eventName || settings.eventName)
       .replace(/{{id}}/g, recipient.id)
+      .replace(/{{issueDate}}/g, recipient.issueDate || settings.issueDate || '24-09-2026')
       .replace(/{{certificateLink}}/g, certUrl);
 
     return {
@@ -38,6 +39,7 @@ class EmailDispatcher {
     const email = this.compileEmail(recipient, settings);
     return `mailto:${encodeURIComponent(email.to)}?subject=${encodeURIComponent(email.subject)}&body=${encodeURIComponent(email.body)}`;
   }
+
 
   async sendSingleEmail(recipient, settings, logCallback = null) {
     if (!recipient.email) {

@@ -105,10 +105,17 @@ class CertificateRenderer {
     const presentedText = categoryConfig.presentedText || 'THIS CERTIFICATE IS PRESENTED TO';
     const bodyCitation = this.compileCitationText(categoryConfig.bodyCitation, compileData);
 
+    const rootUrl = this.getRootUrl();
+    const goldSealUrl = `${rootUrl}assets/badges/gold-seal.svg`;
+    const sonaBannerUrl = `${rootUrl}assets/logos/sona-banner.png`;
+    const trio1Url = `${rootUrl}assets/logos/accreditations-trio-1.png`;
+    const trio2Url = `${rootUrl}assets/logos/accreditations-trio-2.png`;
+    const naacBadgeUrl = `${rootUrl}assets/logos/naac-badge.png`;
+
     const coord1Title = settings.coordinator1Title || 'CLUB CO-ORDINATOR';
     const coord2Title = settings.coordinator2Title || 'CLUB CO-COORDINATOR';
-    const coord1SignUrl = settings.coordinator1SignUrl || 'assets/signatures/signature-coordinator.svg';
-    const coord2SignUrl = settings.coordinator2SignUrl || 'assets/signatures/signature-parthasarathi.svg';
+    const coord1SignUrl = (settings.coordinator1SignUrl && !settings.coordinator1SignUrl.startsWith('assets/')) ? settings.coordinator1SignUrl : `${rootUrl}assets/signatures/signature-coordinator.svg`;
+    const coord2SignUrl = (settings.coordinator2SignUrl && !settings.coordinator2SignUrl.startsWith('assets/')) ? settings.coordinator2SignUrl : `${rootUrl}assets/signatures/signature-parthasarathi.svg`;
 
     return `
       <div class="cert-sheet" id="cert-${certId}" data-cert-id="${certId}">
@@ -151,7 +158,7 @@ class CertificateRenderer {
 
         <!-- 3D Gold Rosette Medallion Badge (Left side centered over wave) -->
         <div class="cert-left-medal">
-          <img src="assets/badges/gold-seal.svg" alt="Official 3D Gold Rosette Medallion" />
+          <img src="${goldSealUrl}" alt="Official 3D Gold Rosette Medallion" />
         </div>
 
         <!-- Main Certificate Content -->
@@ -160,14 +167,14 @@ class CertificateRenderer {
           <!-- Top Header: Sona Logo Banner + 2 Accreditation Strips + NAAC Laurel Wreath Badge -->
           <div class="cert-top-header">
             <div class="cert-sona-banner">
-              <img src="assets/logos/sona-banner.png" alt="Sona College of Technology - Learning is a Celebration!" />
+              <img src="${sonaBannerUrl}" alt="Sona College of Technology - Learning is a Celebration!" />
             </div>
             <div class="cert-accreditations-strip">
-              <img src="assets/logos/accreditations-trio-1.png" alt="NIRF, Anna University, SONA IS A SIRO" class="cert-trio-img" />
-              <img src="assets/logos/accreditations-trio-2.png" alt="UGC, AICTE, NBA" class="cert-trio-img" />
+              <img src="${trio1Url}" alt="NIRF, Anna University, SONA IS A SIRO" class="cert-trio-img" />
+              <img src="${trio2Url}" alt="UGC, AICTE, NBA" class="cert-trio-img" />
             </div>
             <div class="cert-naac-badge">
-              <img src="assets/logos/naac-badge.png" alt="NAAC A++ CGPA: 3.65" />
+              <img src="${naacBadgeUrl}" alt="NAAC A++ CGPA: 3.65" />
             </div>
           </div>
 
@@ -188,7 +195,7 @@ class CertificateRenderer {
             </p>
           </div>
 
-          <!-- Bottom Signatures Footer -->
+          <!-- Bottom Signatures Footer with Center Compact QR Security Stamp (Zero overlap) -->
           <div class="cert-signatures-footer">
             <!-- Left Signature: Club Co-ordinator -->
             <div class="cert-sig-block cert-sig-left">
@@ -197,21 +204,21 @@ class CertificateRenderer {
               <span class="cert-sig-title">${coord1Title}</span>
             </div>
 
+            <!-- Center Compact Official Verification Security Stamp & Micro QR Code (In empty space, no overlay!) -->
+            <div class="cert-auth-stamp">
+              <div class="cert-qr-box" id="cert-qr-${certId}"></div>
+              <div class="cert-auth-meta">
+                <span class="cert-tag-title">OFFICIAL TRUST REGISTRY</span>
+                <span class="cert-tag-id">ID: ${certId}</span>
+                <span class="cert-tag-verify">Scan to Verify</span>
+              </div>
+            </div>
+
             <!-- Right Signature: Club Co-Coordinator (B. Parthasarathi) -->
             <div class="cert-sig-block cert-sig-right">
               <img src="${coord2SignUrl}" alt="Club Co-Coordinator Signature" class="cert-sig-image" />
               <div class="cert-sig-line"></div>
               <span class="cert-sig-title">${coord2Title}</span>
-            </div>
-          </div>
-
-          <!-- Official Verification Security Stamp & Micro QR Code -->
-          <div class="cert-auth-stamp">
-            <div class="cert-qr-box" id="cert-qr-${certId}"></div>
-            <div class="cert-auth-meta">
-              <span class="cert-tag-title">OFFICIAL TRUST REGISTRY</span>
-              <span class="cert-tag-id">ID: ${certId}</span>
-              <span class="cert-tag-verify">sonatech.ac.in/verify</span>
             </div>
           </div>
 
@@ -224,7 +231,7 @@ class CertificateRenderer {
     if (!container) return;
     container.innerHTML = this.renderCertificateHTML(recipient, customSettings);
 
-    // Mount dynamic QR code on the certificate sheet
+    // Mount dynamic compact QR code on the certificate sheet
     const certId = recipient.id || '';
     const qrBox = container.querySelector(`#cert-qr-${certId}`);
     if (qrBox) {
@@ -234,21 +241,22 @@ class CertificateRenderer {
           qrBox.innerHTML = '';
           new QRCode(qrBox, {
             text: verifyUrl,
-            width: 52,
-            height: 52,
+            width: 42,
+            height: 42,
             colorDark: "#111827",
             colorLight: "#ffffff",
             correctLevel: QRCode.CorrectLevel.M
           });
         } else {
-          qrBox.innerHTML = `<img src="https://api.qrserver.com/v1/create-qr-code/?size=52x52&data=${encodeURIComponent(verifyUrl)}" alt="QR" style="width:52px;height:52px;" />`;
+          qrBox.innerHTML = `<img src="https://api.qrserver.com/v1/create-qr-code/?size=42x42&data=${encodeURIComponent(verifyUrl)}" alt="QR" style="width:42px;height:42px;" />`;
         }
       } catch (e) {
-        qrBox.innerHTML = `<img src="https://api.qrserver.com/v1/create-qr-code/?size=52x52&data=${encodeURIComponent(verifyUrl)}" alt="QR" style="width:52px;height:52px;" />`;
+        qrBox.innerHTML = `<img src="https://api.qrserver.com/v1/create-qr-code/?size=42x42&data=${encodeURIComponent(verifyUrl)}" alt="QR" style="width:42px;height:42px;" />`;
       }
     }
   }
 }
 
 window.certRenderer = new CertificateRenderer();
+
 

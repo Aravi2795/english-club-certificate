@@ -4,9 +4,14 @@
   "trailingSlash": false,
   "routes": [
     {
+      "src": "^/admin/assets/(.*)",
+      "dest": "/assets/$1"
+    },
+    {
       "src": "^/admin/verify.*",
       "dest": "/verify.html"
     },
+
     {
       "src": "^/admin/index.*",
       "dest": "/index.html"

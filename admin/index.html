@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Certificate Claim Portal Redirect</title>
+  <script>
+    const search = window.location.search || '';
+    const hash = window.location.hash || '';
+    window.location.replace('../index.html' + search + hash);
+  </script>
+</head>
+<body>
+  <p>Loading Certificate Claim Portal... <a id="redirect-link" href="../index.html">Click here if not redirected automatically</a></p>
+  <script>
+    document.getElementById('redirect-link').href = '../index.html' + (window.location.search || '');
+  </script>
+</body>
+</html>

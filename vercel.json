@@ -2,14 +2,29 @@
   "version": 2,
   "cleanUrls": true,
   "trailingSlash": false,
-  "rewrites": [
-    { "source": "/admin/verify", "destination": "/verify.html" },
-    { "source": "/admin/verify.html", "destination": "/verify.html" },
-    { "source": "/admin/index", "destination": "/index.html" },
-    { "source": "/admin/index.html", "destination": "/index.html" },
-    { "source": "/verify", "destination": "/verify.html" },
-    { "source": "/admin", "destination": "/admin.html" },
-    { "source": "/claim", "destination": "/index.html" }
+  "routes": [
+    {
+      "src": "^/admin/verify.*",
+      "dest": "/verify.html"
+    },
+    {
+      "src": "^/admin/index.*",
+      "dest": "/index.html"
+    },
+    {
+      "src": "^/verify.*",
+      "dest": "/verify.html"
+    },
+    {
+      "src": "^/claim.*",
+      "dest": "/index.html"
+    },
+    {
+      "src": "^/admin$",
+      "dest": "/admin.html"
+    },
+    {
+      "handle": "filesystem"
+    }
   ]
 }
-

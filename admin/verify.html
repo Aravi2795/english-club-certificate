@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Certificate Verification Redirect</title>
+  <script>
+    const search = window.location.search || '';
+    const hash = window.location.hash || '';
+    window.location.replace('../verify.html' + search + hash);
+  </script>
+</head>
+<body>
+  <p>Loading Verified Certificate... <a id="redirect-link" href="../verify.html">Click here if not redirected automatically</a></p>
+  <script>
+    document.getElementById('redirect-link').href = '../verify.html' + (window.location.search || '');
+  </script>
+</body>
+</html>

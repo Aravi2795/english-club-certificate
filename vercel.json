@@ -1,5 +1,15 @@
 {
   "version": 2,
   "cleanUrls": true,
-  "trailingSlash": false
+  "trailingSlash": false,
+  "rewrites": [
+    { "source": "/admin/verify", "destination": "/verify.html" },
+    { "source": "/admin/verify.html", "destination": "/verify.html" },
+    { "source": "/admin/index", "destination": "/index.html" },
+    { "source": "/admin/index.html", "destination": "/index.html" },
+    { "source": "/verify", "destination": "/verify.html" },
+    { "source": "/admin", "destination": "/admin.html" },
+    { "source": "/claim", "destination": "/index.html" }
+  ]
 }
+

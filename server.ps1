@@ -41,7 +41,21 @@ try {
             $rawUrl = "index.html"
         }
 
-        $filePath = Join-Path $basePath $rawUrl
+        # Normalize clean URLs and /admin/* aliases
+        $normalized = $rawUrl
+        if ($normalized -match "^admin/(verify|index)(\.html)?") {
+            $normalized = $normalized -replace "^admin/", ""
+        }
+        if (-not ($normalized -match "\.[a-zA-Z0-9]+$")) {
+            if (Test-Path (Join-Path $basePath ($normalized + ".html"))) {
+                $normalized = $normalized + ".html"
+            }
+        }
+
+        $filePath = Join-Path $basePath $normalized
+        if (-not (Test-Path $filePath -PathType Leaf)) {
+            $filePath = Join-Path $basePath $rawUrl
+        }
 
         if (Test-Path $filePath -PathType Leaf) {
             $ext = [System.IO.Path]::GetExtension($filePath).ToLower()
@@ -58,6 +72,7 @@ try {
             $response.OutputStream.Write($errBytes, 0, $errBytes.Length)
         }
         $response.Close()
+
     }
 } finally {
     $listener.Stop()

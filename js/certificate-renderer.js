@@ -6,15 +6,21 @@
 class CertificateRenderer {
   constructor() {}
 
-  generateVerifyUrl(recipientOrId, customSettings = null) {
+  getRootUrl() {
     const origin = window.location.origin && window.location.origin !== 'null' ? window.location.origin : '';
     let pathname = window.location.pathname || '';
-    if (pathname.includes('/admin.html') || pathname.includes('/verify.html') || pathname.includes('/index.html')) {
-      pathname = pathname.substring(0, pathname.lastIndexOf('/') + 1);
-    } else if (!pathname.endsWith('/')) {
+    
+    // Strip trailing filenames like admin.html, verify.html, index.html, admin, verify
+    pathname = pathname.replace(/\/(admin|verify|index|claim)(\.html)?\/?$/i, '');
+    
+    if (!pathname.endsWith('/')) {
       pathname = pathname + '/';
     }
+    return `${origin}${pathname}`;
+  }
 
+  generateVerifyUrl(recipientOrId, customSettings = null) {
+    const rootUrl = this.getRootUrl();
     let recipient = null;
     let certId = '';
 
@@ -30,21 +36,14 @@ class CertificateRenderer {
 
     if (recipient && window.certStore) {
       const token = window.certStore.encodeCertificateData(recipient, settings);
-      return `${origin}${pathname}verify.html?id=${encodeURIComponent(certId || recipient.id)}&d=${encodeURIComponent(token)}`;
+      return `${rootUrl}verify.html?id=${encodeURIComponent(certId || recipient.id)}&d=${encodeURIComponent(token)}`;
     }
 
-    return `${origin}${pathname}verify.html?id=${encodeURIComponent(certId)}`;
+    return `${rootUrl}verify.html?id=${encodeURIComponent(certId)}`;
   }
 
   generateClaimUrl(recipientOrId, customSettings = null) {
-    const origin = window.location.origin && window.location.origin !== 'null' ? window.location.origin : '';
-    let pathname = window.location.pathname || '';
-    if (pathname.includes('/admin.html') || pathname.includes('/verify.html') || pathname.includes('/index.html')) {
-      pathname = pathname.substring(0, pathname.lastIndexOf('/') + 1);
-    } else if (!pathname.endsWith('/')) {
-      pathname = pathname + '/';
-    }
-
+    const rootUrl = this.getRootUrl();
     let recipient = null;
     let certId = '';
 
@@ -60,11 +59,12 @@ class CertificateRenderer {
 
     if (recipient && window.certStore) {
       const token = window.certStore.encodeCertificateData(recipient, settings);
-      return `${origin}${pathname}index.html?id=${encodeURIComponent(certId || recipient.id)}&d=${encodeURIComponent(token)}`;
+      return `${rootUrl}index.html?id=${encodeURIComponent(certId || recipient.id)}&d=${encodeURIComponent(token)}`;
     }
 
-    return `${origin}${pathname}index.html?id=${encodeURIComponent(certId)}`;
+    return `${rootUrl}index.html?id=${encodeURIComponent(certId)}`;
   }
+
 
   compileCitationText(templateStr, data) {
     if (!templateStr) {
